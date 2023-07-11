@@ -1,54 +1,107 @@
 <template>
-  <div>
-    <img src="http://127.0.0.1:8000/video" className="video-js">
-  </div>
+  <a-config-provider :locale="locale" :get-popup-container="popContainer">
+    <router-view />
+  </a-config-provider>
 </template>
 
 <script>
-import videojs from 'video.js';
-import 'video.js/dist/video-js.css';
+import { enquireScreen } from "./utils/util";
+import { mapState, mapMutations } from "vuex";
+import themeUtil from "@/utils/themeUtil";
+import { getI18nKey } from "@/utils/routerUtil";
 
 export default {
+  name: "App",
+  data() {
+    return {
+      locale: {},
+    };
+  },
+  created() {
+    this.setHtmlTitle();
+    this.setLanguage(this.lang);
+    enquireScreen((isMobile) => this.setDevice(isMobile));
+  },
   mounted() {
-    const videoElement = this.$refs.videoPlayer;
-
-    // 创建 video.js 播放器实例
-    const player = videojs(videoElement);
-
-    // 发送请求获取视频流数据
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', videoUrl, true);
-    xhr.responseType = 'blob';
-
-    xhr.onload = () => {
-      // 获取服务器返回的视频流数据
-      const response = xhr.response;
-
-      // 创建一个 URL 对象，用于生成视频流的 URL
-      const videoUrl = URL.createObjectURL(response);
-
-      // 设置 video.js 播放器的 src 属性为视频流的 URL
-      player.src({
-        src: videoUrl,
-        type: 'video/mp4',
-      });
-
-      // 播放视频
-      player.play();
-    };
-
-    xhr.onerror = () => {
-      console.error('Error fetching the video stream.');
-    };
-
-    xhr.send();
+    this.setWeekModeTheme(this.weekMode);
+  },
+  watch: {
+    weekMode(val) {
+      this.setWeekModeTheme(val);
+    },
+    lang(val) {
+      this.setLanguage(val);
+      this.setHtmlTitle();
+    },
+    $route() {
+      this.setHtmlTitle();
+    },
+    "theme.mode": function(val) {
+      let closeMessage = this.$message.loading(
+        `您选择了主题模式 ${val}, 正在切换...`
+      );
+      themeUtil.changeThemeColor(this.theme.color, val).then(closeMessage);
+    },
+    "theme.color": function(val) {
+      let closeMessage = this.$message.loading(
+        `您选择了主题色 ${val}, 正在切换...`
+      );
+      themeUtil.changeThemeColor(val, this.theme.mode).then(closeMessage);
+    },
+    layout: function() {
+      window.dispatchEvent(new Event("resize"));
+    },
+  },
+  computed: {
+    ...mapState("setting", ["layout", "theme", "weekMode", "lang"]),
+  },
+  methods: {
+    ...mapMutations("setting", ["setDevice"]),
+    setWeekModeTheme(weekMode) {
+      if (weekMode) {
+        document.body.classList.add("week-mode");
+      } else {
+        document.body.classList.remove("week-mode");
+      }
+    },
+    setLanguage(lang) {
+      this.$i18n.locale = lang;
+      switch (lang) {
+        case "CN":
+          this.locale = require("ant-design-vue/es/locale-provider/zh_CN").default;
+          break;
+        case "HK":
+          this.locale = require("ant-design-vue/es/locale-provider/zh_TW").default;
+          break;
+        case "US":
+        default:
+          this.locale = require("ant-design-vue/es/locale-provider/en_US").default;
+          break;
+      }
+    },
+    setHtmlTitle() {
+      const route = this.$route;
+      const key =
+        route.path === "/"
+          ? "home.name"
+          : getI18nKey(route.matched[route.matched.length - 1].path);
+      document.title = process.env.VUE_APP_NAME + " | " + this.$t(key);
+    },
+    popContainer() {
+      return document.getElementById("popContainer");
+    },
   },
 };
 </script>
 
+<style lang="less" scoped>
+#id {
+}
+</style>
 <style>
-.video-js {
-  width: 100%;
-  height: auto;
+.video-js .vjs-big-play-button {
+  left: 50%!important;
+  top: 50%!important;
+  transform: translate(-50%, -50%);
 }
 </style>
