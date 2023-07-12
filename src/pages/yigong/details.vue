@@ -1,20 +1,9 @@
 <template>
   <div class="pages">
     <div class="left-div">
-      <img src="../../assets/avatars.png" alt="" class="avatars" />
-      <div class="name">张三丰</div>
-      <p>我服务，我骄傲</p>
+      <img :src=old_detail.img_url alt="" class="avatars" />
+      <div class="name">{{ old_detail.name }}</div>
       <a-button type="primary" @click="updateInfo">编辑义工信息</a-button>
-      <div class="tag">
-        <div class="tagss">
-          <span class="one">2018-03-09</span>
-          <span class="one">入养老院日期</span>
-        </div>
-        <div class="tagss">
-          <span class="two">2022-04-09</span>
-          <span class="two">离开养老院日期</span>
-        </div>
-      </div>
     </div>
     <div class="person">
       <div class="info-page">
@@ -22,87 +11,62 @@
         <div class="info-wrapper">
           <div class="info-list">
             <span class="labels">姓名：</span>
-            <span class="values">张三丰</span>
+            <span class="values">{{ old_detail.name }}</span>
           </div>
           <div class="info-list">
             <span class="labels">年龄：</span>
-            <span class="values">77</span>
+            <span class="values">{{ old_detail.age }}</span>
           </div>
           <div class="info-list">
             <span class="labels">性别：</span>
-            <span class="values">男</span>
+            <span class="values">{{ old_detail.gender }}</span>
           </div>
           <div class="info-list">
             <span class="labels">手机号码：</span>
-            <span class="values">13345678800</span>
-          </div>
-        
-          <div class="info-list">
-            <span class="labels">身份ID：</span>
-            <span class="values">3</span>
-          </div>
-        </div>
-      </div>
-      <!-- <div class="info-page">
-        <h3>护工信息</h3>
-        <div class="info-wrapper">
-          <div class="info-list">
-            <span class="labels">姓名：</span>
-            <span class="values">张三丰</span>
-          </div>
-          <div class="info-list">
-            <span class="labels">年龄：</span>
-            <span class="values">77</span>
-          </div>
-          <div class="info-list">
-            <span class="labels">性别：</span>
-            <span class="values">男</span>
-          </div>
-          <div class="info-list">
-            <span class="labels">手机号码：</span>
-            <span class="values">13345678800</span>
-          </div>
-          <div class="info-list">
-            <span class="labels">现有子女：</span>
-            <span class="values">3</span>
-          </div>
-          <div class="info-list">
-            <span class="labels">籍贯：</span>
-            <span class="values">3</span>
-          </div>
-          
-          <div class="info-list">
-            <span class="labels">头像：</span>
-            <span class="values">
-              <img
-                src="../../assets/img/logo.png"
-                alt=""
-                style="width: 100px;height: 80px;"
-              />
-            </span>
+            <span class="values">{{ old_detail.phone }}</span>
           </div>
           <div class="info-list">
             <span class="labels">房间号：</span>
-            <span class="values">3</span>
-          </div>
-          <div class="info-list">
-            <span class="labels">家庭住址：</span>
-            <span class="values">江苏省南京市江宁区牛首山XXX号</span>
+            <span class="values">{{ old_detail.room }}</span>
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
 <script>
+import {selectOld} from "@/services/oldPerson";
+import {selectVol} from "@/services/vol";
 export default {
   data() {
-    return {};
+    return {
+      old_detail:{
+        name:'',
+        gender:'',
+        phone:'',
+        age:'',
+        room:'',
+        id_card:'',
+        img_url:'',
+      },
+      id:this.$route.query.id
+    };
+  },
+  mounted() {
+    this.loadData()
   },
   methods: {
-        updateInfo(){
-          this.$router.push("/result/success/update/1");
-        }
+    loadData() {
+      const _this = this
+      selectVol(_this.id).then(function (resp){
+        _this.old_detail = resp.data.data
+        _this.old_detail.img_url = require("../../assets/img/vol/" + _this.old_detail.id + ".jpg")
+        console.log(_this.old_detail.img_url)
+      })
+    },
+    updateInfo(){
+      this.$router.push('/list/query/update/1');
+    }
   },
 };
 </script>
@@ -116,10 +80,10 @@ export default {
 }
 .person {
   padding-left: 20px;
-  flex: 1;
+  background: #fff;
   padding: 20px;
   box-sizing: border-box;
-  background: #fff;
+  flex: 1;
 }
 .left-div {
   width: 300px;
@@ -173,22 +137,24 @@ export default {
   padding: 20px;
   //   background: #fff;
   .info-wrapper {
-   padding-top: 20px;
-   width: 30%;
-   margin:  0 auto;
+    // display: flex;
+    // flex-direction: row;
+    // flex-wrap: wrap;
+    padding-top: 20px;
+    width: 40%;
+    margin: 0 auto;
     .info-list {
       display: flex;
       align-items: center;
       height: 30px;
       // width: 20%;
       margin-bottom: 30px;
-//       box-shadow: 0 0 2px 5px #1890ff;
+      //       box-shadow: 0 0 2px 5px #1890ff;
       .labels {
         font-size: 18px;
         font-weight: bold;
         margin-right: 10px;
         flex-shrink: 0;
-        width: 100px;
       }
       .values {
         font-size: 16px;

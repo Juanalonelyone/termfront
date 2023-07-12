@@ -4,16 +4,20 @@
       <h3>基本信息</h3>
       <div class="info-wrapper">
         <div class="info-list">
+          <span class="labels">id：</span>
+          <a-input v-model="detail.id" readonly></a-input>
+        </div>
+        <div class="info-list">
           <span class="labels">姓名：</span>
-          <a-input v-model="values"></a-input>
+          <a-input v-model="detail.name"></a-input>
         </div>
         <div class="info-list">
           <span class="labels">年龄：</span>
-          <a-input v-model="values"></a-input>
+          <a-input v-model="detail.age"></a-input>
         </div>
         <div class="info-list">
           <span class="labels">性别：</span>
-          <a-radio-group name="radioGroup" :default-value="1">
+          <a-radio-group name="radioGroup" v-model="detail.gender">
             <a-radio :value="1">
               男
             </a-radio>
@@ -24,75 +28,59 @@
         </div>
         <div class="info-list">
           <span class="labels">手机号码：</span>
-          <a-input v-model="values"></a-input>
+          <a-input v-model="detail.phone"></a-input>
         </div>
-
         <div class="info-list">
-          <span class="labels">身份ID：</span>
-          <a-input v-model="values"></a-input>
+          <span class="labels">身份ID</span>
+          <a-input v-model="detail.id_card"></a-input>
         </div>
       </div>
     </div>
-    <!-- <div class="info-page">
-      <h3>护工信息</h3>
-      <div class="info-wrapper">
-        <div class="info-list">
-          <span class="labels">姓名：</span>
-          <a-input v-model="values"></a-input>
-        </div>
-        <div class="info-list">
-          <span class="labels">年龄：</span>
-          <a-input v-model="values"></a-input>
-        </div>
-        <div class="info-list">
-          <span class="labels">性别：</span>
-          <a-input v-model="values"></a-input>
-        </div>
-        <div class="info-list">
-            <span class="labels">手机号码：</span>
-            <a-input v-model="values"></a-input>
-          </div>
-        <div class="info-list">
-          <span class="labels">现有子女：</span>
-          <a-input v-model="values"></a-input>
-        </div>
-        <div class="info-list">
-          <span class="labels">籍贯：</span>
-          <a-input v-model="values"></a-input>
-        </div>
-        <div class="info-list">
-          <span class="labels">家庭住址：</span>
-          <a-input v-model="values"></a-input>
-        </div>
-        <div class="info-list">
-          <span class="labels">头像：</span>
-          <span class="values">
-            <img
-              src="../../assets/img/logo.png"
-              alt=""
-              style="width: 100px;height: 80px;"
-            />
-          </span>
-        </div>
-        <div class="info-list">
-          <span class="labels">房间号：</span>
-          <a-input v-model="values"></a-input>
-        </div>
-      </div>
-    </div> -->
+
     <div style="text-align: right;">
-      <a-button type="primary">提交</a-button>
+      <a-button type="primary" @click="update">提交</a-button>
     </div>
   </div>
 </template>
 <script>
+import {updateVol} from "@/services/vol";
+
 export default {
   data() {
     return {
       values: "",
+      detail:{
+        id:this.$route.query.id.id,
+        name:this.$route.query.id.name,
+        age:this.$route.query.id.age,
+        gender:this.$route.query.id.gender,
+        phone:this.$route.query.id.phone,
+        id_card:this.$route.query.id.id_card,
+      }
     };
   },
-  methods: {},
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init(){
+      console.log(this.detail.gender)
+    },
+    update(){
+      const _this = this
+      updateVol(_this.detail).then(function (resp){
+        //console.log(resp.data.code)
+        if(resp.data.code === 200){
+          console.log(200)
+          alert(resp.data.msg)
+          _this.$router.push("/vol/index");
+        }else {
+          alert(resp.data.msg)
+        }
+      })
+      console.log(this.detail)
+    }
+  },
 };
 </script>
 <style lang="less" scoped>
@@ -114,8 +102,8 @@ export default {
     // flex-direction: row;
     // flex-wrap: wrap;
     // justify-content: space-between;
+    width: 30%;
     padding-top: 20px;
-    width: 40%;
     margin: 0 auto;
     .info-list {
       display: flex;

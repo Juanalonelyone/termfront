@@ -116,7 +116,7 @@ const options = {
           ],
         },
         {
-          path: "result",
+          path: "vol",
           name: "义工信息管理",
           meta: {
             icon: "check-circle-o",
@@ -124,12 +124,12 @@ const options = {
           component: PageView,
           children: [
             {
-              path: "success",
+              path: "index",
               name: "信息列表",
               component: () => import("@/pages/yigong/index"),
             },
             {
-              path: "success/detail/:id",
+              path: "index/detail/:id",
               name: "详情",
               meta: {
                 highlight: "/result/success",
@@ -138,7 +138,7 @@ const options = {
               component: () => import("@/pages/yigong/details"),
             },
             {
-              path: "success/update/:id",
+              path: "index/update/:id",
               name: "修改",
               meta: {
                 highlight: "/result/success",

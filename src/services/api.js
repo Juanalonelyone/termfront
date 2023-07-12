@@ -11,5 +11,11 @@ module.exports = {
   UPDATE_OLD: `${BASE_URL}/update_oldPerson/`,
   SELECT_OLD:`${BASE_URL}/select_old/`,
   SELECT_ALL_OLD:`${BASE_URL}/select_allOld/`,
+  //义工表的操作
+  ADD_VOL: `${BASE_URL}/add_vol/`,
+  DELETE_VOL: `${BASE_URL}/delete_vol/`,
+  UPDATE_VOL: `${BASE_URL}/update_vol/`,
+  SELECT_VOL: `${BASE_URL}/select_vol/`,
+  SELECT_ALL_VOL: `${BASE_URL}/select_allVol/`,
   //todo:其他表操作
 }

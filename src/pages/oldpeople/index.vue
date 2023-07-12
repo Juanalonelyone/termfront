@@ -3,24 +3,23 @@
     <div class="tops">
       <a-form :layout="formLayout">
         <a-form-item
-          label="姓名"
+          label="信息"
           :label-col="formItemLayout.labelCol"
           :wrapper-col="formItemLayout.wrapperCol"
         >
-          <a-input placeholder="请输入老人姓名" />
-        </a-form-item>
-        <a-form-item
-          label="房间号"
-          :label-col="formItemLayout.labelCol"
-          :wrapper-col="formItemLayout.wrapperCol"
-        >
-          <a-input placeholder="请输入老人房间号" />
+          <a-input placeholder="请输入老人id、姓名或房间号" v-model="inputValue" style="width: 200px;"/>
         </a-form-item>
         <a-form-item :wrapper-col="buttonItemLayout.wrapperCol">
-          <a-button type="primary">
+          <a-button type="primary" @click="select">
             查询
           </a-button>
         </a-form-item>
+        <a-form-item>
+          <a-button type="primary" @click="loadData">
+            刷新
+          </a-button>
+        </a-form-item>
+
       </a-form>
       <a-button type="primary" @click="showModalAdd">
         新增
@@ -117,7 +116,7 @@
 </template>
 <script>
 import PageLayout from "@/layouts/PageLayout";
-import {addOld, deleteOld, selectAllOld} from "@/services/oldPerson";
+import {addOld, deleteOld, selectAllOld, selectOld} from "@/services/oldPerson";
 function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener("load", () => callback(reader.result));
@@ -182,7 +181,8 @@ export default {
         check_in:'',
         check_out:'',
         img_url:'C:/img/wcj.jpg'
-      }
+      },
+      inputValue:''
     };
   },
   // eslint-disable-next-line vue/no-unused-components
@@ -253,6 +253,14 @@ export default {
     deleteOld(id){
       deleteOld(id).then(function (resp){
         alert(resp.data.msg)
+      })
+    },
+    select(){
+      const _this = this
+      selectOld(_this.inputValue).then(function (resp){
+        _this.data = []
+        _this.data.push(resp.data.data)
+        //alert(resp.data.msg)
       })
     },
     showModalAdd() {
