@@ -4,16 +4,25 @@
       <h3>基本信息</h3>
       <div class="info-wrapper">
         <div class="info-list">
+          <span class="labels">图像：</span>
+          <img :src=imageData alt="Image" class="avatars" style="width: 120px;height: 160px;padding-right: 10px"/>
+          <input type="file" @change="handleFileUpload" />
+        </div>
+        <div class="info-list" style="padding-top: 80px">
+          <span class="labels">id：</span>
+          <a-input v-model="detail.id" readonly></a-input>
+        </div>
+        <div class="info-list">
           <span class="labels">姓名：</span>
-          <a-input v-model="values"></a-input>
+          <a-input v-model="detail.workername"></a-input>
         </div>
         <div class="info-list">
           <span class="labels">年龄：</span>
-          <a-input v-model="values"></a-input>
+          <a-input v-model="detail.age"></a-input>
         </div>
         <div class="info-list">
           <span class="labels">性别：</span>
-          <a-radio-group name="radioGroup" :default-value="1">
+          <a-radio-group name="radioGroup" v-model="detail.gender">
             <a-radio :value="1">
               男
             </a-radio>
@@ -23,81 +32,84 @@
           </a-radio-group>
         </div>
         <div class="info-list">
-            <span class="labels">手机号码：</span>
-            <a-input v-model="values"></a-input>
-          </div>
-        <div class="info-list">
-          <span class="labels">身份ID：</span>
-          <a-input v-model="values"></a-input>
+          <span class="labels">手机号码：</span>
+          <a-input v-model="detail.phone"></a-input>
         </div>
-       
+        <div class="info-list">
+          <span class="labels">身份ID</span>
+          <a-input v-model="detail.id_card"></a-input>
+        </div>
       </div>
     </div>
-    <!-- <div class="info-page">
-      <h3>护工信息</h3>
-      <div class="info-wrapper">
-        <div class="info-list">
-          <span class="labels">姓名：</span>
-          <a-input v-model="values"></a-input>
-        </div>
-        <div class="info-list">
-          <span class="labels">年龄：</span>
-          <a-input v-model="values"></a-input>
-        </div>
-        <div class="info-list">
-          <span class="labels">性别：</span>
-          <a-input v-model="values"></a-input>
-        </div>
-        <div class="info-list">
-            <span class="labels">手机号码：</span>
-            <a-input v-model="values"></a-input>
-          </div>
-        <div class="info-list">
-          <span class="labels">现有子女：</span>
-          <a-input v-model="values"></a-input>
-        </div>
-        <div class="info-list">
-          <span class="labels">籍贯：</span>
-          <a-input v-model="values"></a-input>
-        </div>
-        <div class="info-list">
-          <span class="labels">家庭住址：</span>
-          <a-input v-model="values"></a-input>
-        </div>
-        <div class="info-list">
-          <span class="labels">头像：</span>
-          <span class="values">
-            <img
-              src="../../assets/img/logo.png"
-              alt=""
-              style="width: 100px;height: 80px;"
-            />
-          </span>
-        </div>
-        <div class="info-list">
-          <span class="labels">房间号：</span>
-          <a-input v-model="values"></a-input>
-        </div>
-      </div>
-    </div> -->
+
     <div style="text-align: right;">
-        <a-button type="primary">提交</a-button>
+      <a-button type="primary" @click="update">提交</a-button>
     </div>
   </div>
 </template>
 <script>
+import {selectWorker, updateWorker} from "@/services/worker";
+const formData = new FormData();
 export default {
   data() {
     return {
       values: "",
+      imageData:null,
+      selectedImage:null,
+      detail:{
+        id:this.$route.query.id.id,
+        workername:this.$route.query.id.workername,
+        age:this.$route.query.id.age,
+        gender:this.$route.query.id.gender,
+        phone:this.$route.query.id.phone,
+        id_card:this.$route.query.id.id_card,
+      }
     };
   },
-  methods: {},
+  mounted() {
+    this.init()
+    this.loadImg()
+  },
+  methods: {
+    handleFileUpload(event) {
+      const _this = this
+      this.selectedImage = event.target.files[0]; // 保存用户选择的第一个图像文件
+      const reader = new FileReader();
+      reader.onload = () => {
+        formData.append('img', _this.selectedImage, "new.jpg");
+        console.log(this.detail)
+      }
+      reader.readAsDataURL(_this.selectedImage);
+    },
+    init(){
+      console.log(this.detail.gender)
+    },
+    loadImg(){
+      const _this = this
+      selectWorker(_this.detail.id).then(function (resp){
+        _this.imageData = `data:image/png;base64,${resp.data.data.image_info.imageData}`
+      })
+    },
+    update(){
+      const _this = this
+      formData.append('worker', JSON.stringify(_this.detail)); // 将老人信息转换为JSON字符串并添加到FormData中
+      updateWorker(formData).then(function (resp){
+        //console.log(resp.data.code)
+        if(resp.data.code === 200){
+          console.log(200)
+          alert(resp.data.msg)
+          _this.$router.push("/worker/index");
+        }else {
+          alert(resp.data.msg)
+        }
+      })
+    }
+  },
 };
 </script>
 <style lang="less" scoped>
 .pages {
-    padding: 20px;
+  padding: 20px;
   h3 {
     font-size: 20px;
     font-weight: bold;
@@ -107,11 +119,15 @@ export default {
     color: deepskyblue;
     margin-bottom: 20px;
   }
- 
+
   background: #fff;
   .info-wrapper {
+    // display: flex;
+    // flex-direction: row;
+    // flex-wrap: wrap;
+    // justify-content: space-between;
+    width: 30%;
     padding-top: 20px;
-    width: 40%;
     margin: 0 auto;
     .info-list {
       display: flex;

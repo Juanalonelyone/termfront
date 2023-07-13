@@ -108,7 +108,11 @@
               </a-radio>
             </a-radio-group>
           </a-form-item>
-
+          <a-form-item>
+            <div>
+              <input type="file" @change="handleFileUpload" />
+            </div>
+          </a-form-item>
         </a-form>
       </div>
     </a-modal>
@@ -169,9 +173,9 @@ export default {
       visibleAdd: false,
       confirmLoading: false,
       loading: false,
-      imageUrl: "",
+      selectedImage:null,
       newOld:{
-        id:'4',
+        id:'',
         name:'',
         room:'',
         gender:'',
@@ -180,7 +184,7 @@ export default {
         age:'',
         check_in:'',
         check_out:'',
-        img_url:'C:/img/wcj.jpg'
+        img_url:''
       },
       inputValue:''
     };
@@ -211,6 +215,9 @@ export default {
     },
   },
   methods: {
+    handleFileUpload(event) {
+      this.selectedImage = event.target.files[0]; // 保存用户选择的第一个图像文件
+    },
     loadData(){
       const _this = this
       selectAllOld().then(function (resp){
@@ -267,17 +274,30 @@ export default {
       this.visibleAdd = true;
     },
     handleOk() {
-      const _this = this
-      this.ModalText = "The modal will be closed after two seconds";
-      this.confirmLoading = true;
-      setTimeout(() => {
-        this.visibleAdd = false;
-        this.confirmLoading = false;
-        addOld(_this.newOld).then(function (resp){
-          alert(resp.data.msg)
-        })
-      }, 2000);
+      const _this = this;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const formData = new FormData();
+        formData.append('old', JSON.stringify(_this.newOld)); // 将老人信息转换为JSON字符串并添加到FormData中
+        formData.append('img', _this.selectedImage, "new.jpg");
+
+        // 在这里执行其他对图像内容的操作
+        // 例如，你可以将图像内容保存到数据库或进行其他处理
+
+        this.confirmLoading = true;
+        setTimeout(() => {
+          this.visibleAdd = false;
+          this.confirmLoading = false;
+          addOld(formData).then(function (resp) { // 修改调用addOld函数的参数
+            alert(resp.data.msg);
+          });
+        }, 2000);
+      };
+
+      reader.readAsDataURL(_this.selectedImage); // 开始读取图像数据
     },
+
+
     handleCancel(e) {
       console.log("Clicked cancel button");
       this.visibleAdd = false;

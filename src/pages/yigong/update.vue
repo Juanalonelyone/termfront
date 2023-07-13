@@ -4,6 +4,11 @@
       <h3>基本信息</h3>
       <div class="info-wrapper">
         <div class="info-list">
+          <span class="labels">图像：</span>
+          <img :src=imageData alt="Image" class="avatars" style="width: 120px;height: 160px;padding-right: 10px"/>
+          <input type="file" @change="handleFileUpload" />
+        </div>
+        <div class="info-list" style="padding-top: 80px">
           <span class="labels">id：</span>
           <a-input v-model="detail.id" readonly></a-input>
         </div>
@@ -43,12 +48,14 @@
   </div>
 </template>
 <script>
-import {updateVol} from "@/services/vol";
-
+import {selectVol, updateVol} from "@/services/vol";
+const formData = new FormData();
 export default {
   data() {
     return {
       values: "",
+      imageData:null,
+      selectedImage:null,
       detail:{
         id:this.$route.query.id.id,
         name:this.$route.query.id.name,
@@ -61,14 +68,32 @@ export default {
   },
   mounted() {
     this.init()
+    this.loadImg()
   },
   methods: {
+    handleFileUpload(event) {
+      const _this = this
+      this.selectedImage = event.target.files[0]; // 保存用户选择的第一个图像文件
+      const reader = new FileReader();
+      reader.onload = () => {
+        formData.append('img', _this.selectedImage, "new.jpg");
+      }
+      reader.readAsDataURL(_this.selectedImage);
+    },
     init(){
       console.log(this.detail.gender)
     },
+    loadImg(){
+      const _this = this
+      selectVol(_this.detail.id).then(function (resp){
+        _this.imageData = `data:image/png;base64,${resp.data.data.image_info.imageData}`
+        console.log( _this.imageData)
+      })
+    },
     update(){
       const _this = this
-      updateVol(_this.detail).then(function (resp){
+      formData.append('vol', JSON.stringify(_this.detail)); // 将老人信息转换为JSON字符串并添加到FormData中
+      updateVol(formData).then(function (resp){
         //console.log(resp.data.code)
         if(resp.data.code === 200){
           console.log(200)

@@ -17,5 +17,11 @@ module.exports = {
   UPDATE_VOL: `${BASE_URL}/update_vol/`,
   SELECT_VOL: `${BASE_URL}/select_vol/`,
   SELECT_ALL_VOL: `${BASE_URL}/select_allVol/`,
+  //工作人员表操作
+  ADD_WORKER: `${BASE_URL}/add_Worker/`,
+  DELETE_WORKER: `${BASE_URL}/delete_Worker/`,
+  UPDATE_WORKER: `${BASE_URL}/update_Worker/`,
+  SELECT_WORKER:`${BASE_URL}/select_Worker/`,
+  SELECT_ALL_WORKER:`${BASE_URL}/select_allWorker/`,
   //todo:其他表操作
 }

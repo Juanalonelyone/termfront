@@ -1,17 +1,16 @@
 <template>
   <div class="pages">
     <div class="left-div">
-      <img src="../../assets/avatars.png" alt="" class="avatars" />
-      <div class="name">张三丰</div>
-      <p>所有不合时宜的相遇就是遗憾</p>
+      <img :src=imageData alt="" class="avatars" />
+      <div class="name">{{ worker_detail.workername }}</div>
       <a-button type="primary" @click="updateInfo">编辑员工信息</a-button>
       <div class="tag">
         <div class="tagss">
-          <span class="one">2018-03-09</span>
+          <span class="one">{{ worker_detail.check_in }}</span>
           <span class="one">入职日期</span>
         </div>
         <div class="tagss">
-          <span class="two">2022-04-09</span>
+          <span class="two">{{ worker_detail.check_out }}</span>
           <span class="two">离职日期</span>
         </div>
       </div>
@@ -22,87 +21,59 @@
         <div class="info-wrapper">
           <div class="info-list">
             <span class="labels">姓名：</span>
-            <span class="values">张三丰</span>
+            <span class="values">{{ worker_detail.workername }}</span>
           </div>
           <div class="info-list">
             <span class="labels">年龄：</span>
-            <span class="values">77</span>
+            <span class="values">{{ worker_detail.age }}</span>
           </div>
           <div class="info-list">
             <span class="labels">性别：</span>
-            <span class="values">男</span>
+            <span class="values">{{ worker_detail.gender }}</span>
           </div>
           <div class="info-list">
             <span class="labels">手机号码：</span>
-            <span class="values">13345678800</span>
-          </div>
-
-          <div class="info-list">
-            <span class="labels">身份ID：</span>
-            <span class="values">3</span>
+            <span class="values">{{ worker_detail.phone }}</span>
           </div>
         </div>
       </div>
-      <!-- <div class="info-page">
-        <h3>护工信息</h3>
-        <div class="info-wrapper">
-          <div class="info-list">
-            <span class="labels">姓名：</span>
-            <span class="values">张三丰</span>
-          </div>
-          <div class="info-list">
-            <span class="labels">年龄：</span>
-            <span class="values">77</span>
-          </div>
-          <div class="info-list">
-            <span class="labels">性别：</span>
-            <span class="values">男</span>
-          </div>
-          <div class="info-list">
-            <span class="labels">手机号码：</span>
-            <span class="values">13345678800</span>
-          </div>
-          <div class="info-list">
-            <span class="labels">现有子女：</span>
-            <span class="values">3</span>
-          </div>
-          <div class="info-list">
-            <span class="labels">籍贯：</span>
-            <span class="values">3</span>
-          </div>
-          
-          <div class="info-list">
-            <span class="labels">头像：</span>
-            <span class="values">
-              <img
-                src="../../assets/img/logo.png"
-                alt=""
-                style="width: 100px;height: 80px;"
-              />
-            </span>
-          </div>
-          <div class="info-list">
-            <span class="labels">房间号：</span>
-            <span class="values">3</span>
-          </div>
-          <div class="info-list">
-            <span class="labels">家庭住址：</span>
-            <span class="values">江苏省南京市江宁区牛首山XXX号</span>
-          </div>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
 <script>
+import {selectWorker} from "@/services/worker";
 export default {
   data() {
-    return {};
+    return {
+      worker_detail:{
+        workername:'',
+        gender:'',
+        phone:'',
+        age:'',
+        id_card:'',
+        img_url:'',
+        check_in:'',
+        check_out:''
+      },
+      imageData:null,
+      id:this.$route.query.id
+    };
+  },
+  mounted() {
+    this.loadData()
   },
   methods: {
-    updateInfo() {
-      this.$router.push("/yuangong/basic/update/1");
+    loadData() {
+      const _this = this
+      selectWorker(_this.id).then(function (resp){
+        _this.worker_detail = resp.data.data
+        _this.imageData = `data:image/png;base64,${resp.data.data.image_info.imageData}`
+        console.log(_this.worker_detail.img_url)
+      })
     },
+    updateInfo(){
+      this.$router.push({path:'/list/query/update/'+this.id,query:{id:this.worker_detail}});
+    }
   },
 };
 </script>
@@ -116,12 +87,10 @@ export default {
 }
 .person {
   padding-left: 20px;
-  width: 100%;
-  flex: 1;
-  box-sizing: border-box;
   background: #fff;
   padding: 20px;
-  
+  box-sizing: border-box;
+  flex: 1;
 }
 .left-div {
   width: 300px;
@@ -130,9 +99,9 @@ export default {
   align-items: center;
   justify-content: center;
   border-right: 2px dashed #1890ff;
-  background: #fff;
   padding: 20px;
   box-sizing: border-box;
+  background: #fff;
 }
 .tag {
   display: flex;
@@ -173,9 +142,11 @@ export default {
     color: #1890ff;
   }
   padding: 20px;
-
   //   background: #fff;
   .info-wrapper {
+    // display: flex;
+    // flex-direction: row;
+    // flex-wrap: wrap;
     padding-top: 20px;
     width: 40%;
     margin: 0 auto;
@@ -191,7 +162,6 @@ export default {
         font-weight: bold;
         margin-right: 10px;
         flex-shrink: 0;
-        width: 100px;
       }
       .values {
         font-size: 16px;

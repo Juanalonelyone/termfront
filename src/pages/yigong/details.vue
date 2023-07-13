@@ -1,7 +1,7 @@
 <template>
   <div class="pages">
     <div class="left-div">
-      <img :src=old_detail.img_url alt="" class="avatars" />
+      <img :src=imageData alt="Image" class="avatars" />
       <div class="name">{{ old_detail.name }}</div>
       <a-button type="primary" @click="updateInfo">编辑义工信息</a-button>
     </div>
@@ -25,18 +25,14 @@
             <span class="labels">手机号码：</span>
             <span class="values">{{ old_detail.phone }}</span>
           </div>
-          <div class="info-list">
-            <span class="labels">房间号：</span>
-            <span class="values">{{ old_detail.room }}</span>
-          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import {selectOld} from "@/services/oldPerson";
 import {selectVol} from "@/services/vol";
+
 export default {
   data() {
     return {
@@ -45,10 +41,10 @@ export default {
         gender:'',
         phone:'',
         age:'',
-        room:'',
         id_card:'',
         img_url:'',
       },
+      imageData:null,
       id:this.$route.query.id
     };
   },
@@ -60,12 +56,12 @@ export default {
       const _this = this
       selectVol(_this.id).then(function (resp){
         _this.old_detail = resp.data.data
-        _this.old_detail.img_url = require("../../assets/img/vol/" + _this.old_detail.id + ".jpg")
-        console.log(_this.old_detail.img_url)
+        _this.imageData = `data:image/png;base64,${resp.data.data.image_info.imageData}`
+        console.log( _this.imageData)
       })
     },
     updateInfo(){
-      this.$router.push('/list/query/update/1');
+      this.$router.push({path:'/list/query/update/'+this.id,query:{id:this.old_detail}});
     }
   },
 };

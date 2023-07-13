@@ -3,18 +3,11 @@
     <div class="tops">
       <a-form :layout="formLayout">
         <a-form-item
-          label="姓名"
-          :label-col="formItemLayout.labelCol"
-          :wrapper-col="formItemLayout.wrapperCol"
+            label="信息"
+            :label-col="formItemLayout.labelCol"
+            :wrapper-col="formItemLayout.wrapperCol"
         >
-          <a-input placeholder="请输入员工姓名" />
-        </a-form-item>
-        <a-form-item
-          label="职务"
-          :label-col="formItemLayout.labelCol"
-          :wrapper-col="formItemLayout.wrapperCol"
-        >
-          <a-input placeholder="请输入员工职务" />
+          <a-input placeholder="请输入员工信息" />
         </a-form-item>
         <a-form-item :wrapper-col="buttonItemLayout.wrapperCol">
           <a-button type="primary">
@@ -28,7 +21,7 @@
     </div>
 
     <a-table :columns="columns" :data-source="data" style="margin-top: 20px;">
-      <a slot="name" slot-scope="text">{{ text }}</a>
+      <a slot="workername" slot-scope="text">{{ text }}</a>
       <span slot="customTitle"> 姓名</span>
       <span slot="tags" slot-scope="tags">
         <a-tag v-for="tag in tags" :key="tag" color="green">
@@ -37,12 +30,12 @@
       </span>
 
       <span
-        slot="operate"
-        slot-scope="id"
-        style="display: flex;align-items: center;"
-        class="btns"
+          slot="operate"
+          slot-scope="id"
+          style="display: flex;align-items: center;"
+          class="btns"
       >
-        <a-button type="danger">删除</a-button>
+        <a-button type="danger" @click="deleteWorker(id.id)">删除</a-button>
 
         <a-button type="primary" @click="updateInfo(id)">修改</a-button>
         <a-button type="primary" @click="viewInfo(id)">查看</a-button>
@@ -51,49 +44,49 @@
     <!-- 新增 -->
 
     <a-modal
-      title="新增"
-      width="60%"
-      :visible="visibleAdd"
-      :confirm-loading="confirmLoading"
-      @ok="handleOk"
-      @cancel="handleCancel"
+        title="新增"
+        width="60%"
+        :visible="visibleAdd"
+        :confirm-loading="confirmLoading"
+        @ok="handleOk"
+        @cancel="handleCancel"
     >
       <div>
         <a-form :layout="formLayoutAdd">
           <a-form-item
-            label="姓名"
-            :label-col="formItemLayout.labelCol"
-            :wrapper-col="formItemLayout.wrapperCol"
+              label="姓名"
+              :label-col="formItemLayout.labelCol"
+              :wrapper-col="formItemLayout.wrapperCol"
           >
-            <a-input placeholder="请输入员工姓名" />
+            <a-input placeholder="请输入员工姓名" v-model="newWorker.workername"/>
           </a-form-item>
           <a-form-item
-            label="手机号"
-            :label-col="formItemLayout.labelCol"
-            :wrapper-col="formItemLayout.wrapperCol"
+              label="手机号"
+              :label-col="formItemLayout.labelCol"
+              :wrapper-col="formItemLayout.wrapperCol"
           >
-            <a-input placeholder="请输入员工手机号" />
+            <a-input placeholder="请输入手机号" v-model="newWorker.phone"/>
           </a-form-item>
           <a-form-item
-            label="身份ID"
-            :label-col="formItemLayout.labelCol"
-            :wrapper-col="formItemLayout.wrapperCol"
+              label="身份ID"
+              :label-col="formItemLayout.labelCol"
+              :wrapper-col="formItemLayout.wrapperCol"
           >
-            <a-input placeholder="请输入员工身份ID" />
+            <a-input placeholder="请输入身份ID" v-model="newWorker.id_card"/>
           </a-form-item>
           <a-form-item
-            label="年龄"
-            :label-col="formItemLayout.labelCol"
-            :wrapper-col="formItemLayout.wrapperCol"
+              label="年龄"
+              :label-col="formItemLayout.labelCol"
+              :wrapper-col="formItemLayout.wrapperCol"
           >
-            <a-input placeholder="请输入员工年龄" />
+            <a-input placeholder="请输入员工年龄" v-model="newWorker.age"/>
           </a-form-item>
           <a-form-item
-            label="性别"
-            :label-col="formItemLayout.labelCol"
-            :wrapper-col="formItemLayout.wrapperCol"
+              label="性别"
+              :label-col="formItemLayout.labelCol"
+              :wrapper-col="formItemLayout.wrapperCol"
           >
-            <a-radio-group name="radioGroup" :default-value="1">
+            <a-radio-group name="radioGroup" v-model="newWorker.gender">
               <a-radio :value="1">
                 男
               </a-radio>
@@ -102,7 +95,11 @@
               </a-radio>
             </a-radio-group>
           </a-form-item>
-        
+          <a-form-item>
+            <div>
+              <input type="file" @change="handleFileUpload" />
+            </div>
+          </a-form-item>
         </a-form>
       </div>
     </a-modal>
@@ -110,6 +107,7 @@
 </template>
 <script>
 import PageLayout from "@/layouts/PageLayout";
+import {addWorker, deleteWorker, selectAllWorker} from "@/services/worker";
 function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener("load", () => callback(reader.result));
@@ -117,10 +115,10 @@ function getBase64(img, callback) {
 }
 const columns = [
   {
-    dataIndex: "name",
-    key: "name",
+    dataIndex: "workername",
+    key: "workername",
     slots: { title: "customTitle" },
-    scopedSlots: { customRender: "name" },
+    scopedSlots: { customRender: "workername" },
   },
   {
     title: "年龄",
@@ -129,55 +127,26 @@ const columns = [
   },
   {
     title: "性别",
-    dataIndex: "address",
-    key: "address",
+    dataIndex: "gender",
+    key: "gender",
   },
   {
     title: "手机号码",
     dataIndex: "phone",
     key: "phone",
   },
-
   {
     title: "操作",
     key: "operate",
     scopedSlots: { customRender: "operate" },
   },
 ];
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: [11],
-    id: 1,
-    phone:'13345678800'
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: [12],
-    id: 2,
-    phone:'13345678800'
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sidney No. 1 Lake Park",
-    tags: [13],
-    id: 3,
-    phone:'13345678800'
-  },
-];
+
 export default {
   data() {
     return {
       value: "",
-      data,
+      data:[],
       columns,
       arr: [],
       formLayout: "inline",
@@ -186,39 +155,60 @@ export default {
       confirmLoading: false,
       loading: false,
       imageUrl: "",
+      selectedImage:null,
+      newWorker:{
+        id:'',
+        workername:'',
+        gender:'',
+        phone:'',
+        id_card:'',
+        age:'',
+        img_url:''
+      }
     };
   },
+  // eslint-disable-next-line vue/no-unused-components
   components: { PageLayout },
   mounted() {
     this.arr = [...this.data];
+    this.loadData()
   },
   computed: {
     formItemLayout() {
       const { formLayout } = this;
       return formLayout === "horizontal"
-        ? {
+          ? {
             labelCol: { span: 4 },
             wrapperCol: { span: 14 },
           }
-        : {};
+          : {};
     },
     buttonItemLayout() {
       const { formLayout } = this;
       return formLayout === "horizontal"
-        ? {
+          ? {
             wrapperCol: { span: 14, offset: 4 },
           }
-        : {};
+          : {};
     },
   },
   methods: {
-    updateInfo(id) {
-      this.$router.push("/yuangong/basic/update/" + id.id);
+    handleFileUpload(event) {
+      this.selectedImage = event.target.files[0]; // 保存用户选择的第一个图像文件
+    },
+    loadData(){
+      const _this = this
+      selectAllWorker().then(function (resp){
+        _this.data = resp.data.data
+      })
+    },
+    updateInfo(id){
+      console.log(id)
+      this.$router.push({path:'/worker/index/update/'+id.id,query:{id:id}});
     },
     viewInfo(id) {
-      console.log(id);
-      this.$router.push("/yuangong/basic/detail/" + id.id);
-      
+      console.log(id)
+      this.$router.push({path:'/worker/index/detail/'+id.id,query:{id:id.id}});
     },
     handleChange(info) {
       if (info.file.status === "uploading") {
@@ -235,7 +225,7 @@ export default {
     },
     beforeUpload(file) {
       const isJpgOrPng =
-        file.type === "image/jpeg" || file.type === "image/png";
+          file.type === "image/jpeg" || file.type === "image/png";
       if (!isJpgOrPng) {
         this.$message.error("You can only upload JPG file!");
       }
@@ -245,16 +235,36 @@ export default {
       }
       return isJpgOrPng && isLt2M;
     },
+    deleteWorker(id){
+      deleteWorker(id).then(function (resp){
+        alert(resp.data.msg)
+      })
+    },
     showModalAdd() {
       this.visibleAdd = true;
     },
-    handleOk(e) {
-      this.ModalText = "The modal will be closed after two seconds";
-      this.confirmLoading = true;
-      setTimeout(() => {
-        this.visibleAdd = false;
-        this.confirmLoading = false;
-      }, 2000);
+    handleOk() {
+      const _this = this;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const formData = new FormData();
+        formData.append('worker', JSON.stringify(_this.newWorker)); // 将老人信息转换为JSON字符串并添加到FormData中
+        formData.append('img', _this.selectedImage, "new.jpg");
+
+        // 在这里执行其他对图像内容的操作
+        // 例如，你可以将图像内容保存到数据库或进行其他处理
+
+        this.confirmLoading = true;
+        setTimeout(() => {
+          this.visibleAdd = false;
+          this.confirmLoading = false;
+          addWorker(formData).then(function (resp) { // 修改调用addOld函数的参数
+            alert(resp.data.msg);
+          });
+        }, 2000);
+      };
+
+      reader.readAsDataURL(_this.selectedImage); // 开始读取图像数据
     },
     handleCancel(e) {
       console.log("Clicked cancel button");
@@ -291,7 +301,7 @@ export default {
         ];
       } else {
         this.data = this.data.filter(
-          (item) => item.name.indexOf(value.data) != -1
+            (item) => item.name.indexOf(value.data) != -1
         );
       }
     },

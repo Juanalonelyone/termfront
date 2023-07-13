@@ -78,7 +78,7 @@ const options = {
           ],
         },
         {
-          path: "yuangong",
+          path: "worker",
           name: "工作人员信息管理",
           meta: {
             icon: "profile",
@@ -86,12 +86,12 @@ const options = {
           component: PageView,
           children: [
             {
-              path: "basic",
+              path: "index",
               name: "信息管理",
               component: () => import("@/pages/yuangong/index"),
             },
             {
-              path: "basic/detail/:id",
+              path: "index/detail/:id",
               name: "详情",
               meta: {
                 highlight: "/yuangong/basic",
@@ -100,7 +100,7 @@ const options = {
               component: () => import("@/pages/yuangong/details"),
             },
             {
-              path: "basic/update/:id",
+              path: "index/update/:id",
               name: "修改",
               meta: {
                 highlight: "/yuangong/basic",
