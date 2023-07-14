@@ -1,8 +1,6 @@
 <template>
   <div class="video-page">
-    <a-button type="primary" @click="addCap"></a-button>
     <div class="video-row">
-
       <div class="video-container">
         <img id="video1" class="video-js">
         <select id="1" v-model="selectSource1">
@@ -26,28 +24,28 @@
       </div>
     </div>
 
-    <div class="video-row">
-      <div class="video-container">
-        <img id="video3" class="video-js">
-        <select id="3" v-model="selectSource3">
-          <option value="">请选择</option>
-          <option v-for="source in sources" :key="source.id" :value="source.id">{{ source.name }}</option>
-        </select>
-        <a-button type="primary" @click="changeSource">
-          切换
-        </a-button>
-      </div>
+<!--    <div class="video-row">-->
+<!--      <div class="video-container">-->
+<!--        <img id="video3" class="video-js">-->
+<!--        <select id="3" v-model="selectSource3">-->
+<!--          <option value="">请选择</option>-->
+<!--          <option v-for="source in sources" :key="source.id" :value="source.id">{{ source.name }}</option>-->
+<!--        </select>-->
+<!--        <a-button type="primary" @click="changeSource">-->
+<!--          切换-->
+<!--        </a-button>-->
+<!--      </div>-->
 
-      <div class="video-container">
-        <img id="video4" class="video-js">
-        <select id="4" v-model="selectSource4">
-          <option value="">请选择</option>
-          <option v-for="source in sources" :key="source.id" :value="source.id">{{ source.name }}</option>
-        </select>
-        <a-button type="primary" @click="changeSource">
-          切换
-        </a-button>
-      </div>
+<!--      <div class="video-container">-->
+<!--        <img id="video4" class="video-js">-->
+<!--        <select id="4" v-model="selectSource4">-->
+<!--          <option value="">请选择</option>-->
+<!--          <option v-for="source in sources" :key="source.id" :value="source.id">{{ source.name }}</option>-->
+<!--        </select>-->
+<!--        <a-button type="primary" @click="changeSource">-->
+<!--          切换-->
+<!--        </a-button>-->
+<!--      </div>-->
     </div>
   </div>
 </template>
@@ -55,29 +53,23 @@
 
 import videojs from 'video.js';
 import "video.js/dist/video-js.css";
-import {addCap, selectAllCap} from "@/services/cap";
+import {selectAllCap} from "@/services/cap";
 export default {
   mounted() {
-    this.loadVideo()
     this.getSources()
+    this.loadVideo()
   },
   data() {
     return {
       selectSource1:'1', // 用于绑定选择的视频流
       selectSource2:'2', // 用于绑定选择的视频流
-      selectSource3:'3', // 用于绑定选择的视频流
-      selectSource4:'4', // 用于绑定选择的视频流
+      // selectSource3:'3', // 用于绑定选择的视频流
+      // selectSource4:'4', // 用于绑定选择的视频流
       src1:"http://127.0.0.1:8000/video1/1",
       src2:"http://127.0.0.1:8000/video2/2",
-      src3:"http://127.0.0.1:8000/video3/3",
-      src4:"http://127.0.0.1:8000/video4/4",
-      sources: [  // 存储水果选项的数组
-        { id: 1, name: 'room1' },
-        { id: 2, name: 'room2' },
-        { id: 3, name: 'room3' },
-        { id: 4, name: 'room4' },
-        { id: 5, name: 'room5' },
-      ],
+      // src3:"http://127.0.0.1:8000/video3/3",
+      // src4:"http://127.0.0.1:8000/video4/4",
+      sources: [],
     };
   },
   methods: {
@@ -86,15 +78,15 @@ export default {
       const variables = new Set([
         this.selectSource1,
         this.selectSource2,
-        this.selectSource3,
-        this.selectSource4
+        // this.selectSource3,
+        // this.selectSource4
       ]);
       // const video_id = event.target.parentNode.id
-      if (variables.size === 4) {
+      if (variables.size === 2) {
         _this.src1 = "http://127.0.0.1:8000/video1/" + _this.selectSource1
         _this.src2 = "http://127.0.0.1:8000/video2/" + _this.selectSource2
-        _this.src3 = "http://127.0.0.1:8000/video3/" + _this.selectSource3
-        _this.src4 = "http://127.0.0.1:8000/video4/" + _this.selectSource4
+        // _this.src3 = "http://127.0.0.1:8000/video3/" + _this.selectSource3
+        // _this.src4 = "http://127.0.0.1:8000/video4/" + _this.selectSource4
         _this.loadVideo()
       } else {
         alert("error:该摄像头视频正在播放中，请勿重复选择！！！")
@@ -110,26 +102,26 @@ export default {
     loadVideo() {
       const videoPlayer1 = videojs("video1"); // 绑定id为video1的视频元素
       const videoPlayer2 = videojs("video2"); // 绑定id为video2的视频元素
-      const videoPlayer3 = videojs("video3"); // 绑定id为video3的视频元素
-      const videoPlayer4 = videojs("video4"); // 绑定id为video4的视频元素
+      // const videoPlayer3 = videojs("video3"); // 绑定id为video3的视频元素
+      // const videoPlayer4 = videojs("video4"); // 绑定id为video4的视频元素
 
       // 销毁已存在的视频播放器
       videoPlayer1.dispose();
       videoPlayer2.dispose();
-      videoPlayer3.dispose();
-      videoPlayer4.dispose();
+      // videoPlayer3.dispose();
+      // videoPlayer4.dispose();
 
       // 创建新的视频播放器并加载视频源
       videoPlayer1.src({ src: this.src1, type: 'application/x-mpegURL' });
       videoPlayer2.src({ src: this.src2, type: 'application/x-mpegURL' });
-      videoPlayer3.src({ src: this.src3, type: 'application/x-mpegURL' });
-      videoPlayer4.src({ src: this.src4, type: 'application/x-mpegURL' });
+      // videoPlayer3.src({ src: this.src3, type: 'application/x-mpegURL' });
+      // videoPlayer4.src({ src: this.src4, type: 'application/x-mpegURL' });
 
       // 初始化视频播放器
       videoPlayer1.load();
       videoPlayer2.load();
-      videoPlayer3.load();
-      videoPlayer4.load();
+      // videoPlayer3.load();
+      // videoPlayer4.load();
     },
   }
 };

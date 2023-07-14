@@ -163,12 +163,12 @@ const options = {
           children: [
             {
               path: "manage",
-              name: "数据管理",
-              component: () => import("@/pages/manage/index"),
+              name: "摄像头管理",
+              component: () => import("@/pages/video/manage.vue"),
             },
             {
               path: "video",
-              name: "摄像头管理",
+              name: "查看监控",
               component: () => import("@/pages/video/index"),
             },
           ],

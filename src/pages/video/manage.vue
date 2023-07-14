@@ -217,9 +217,10 @@ export default {
     update(){
       const _this = this
       _this.handleOk()
+      console.log(_this.newCaps)
       updateCap(_this.newCaps).then(function (resp){
         alert(resp.data.msg)
-        _this.newCap.methods=[]
+        _this.handleCancel()
       })
     },
     addCap(){
@@ -239,38 +240,40 @@ export default {
     add(){
       const _this = this
       _this.handleOk()
+      console.log(_this.newCaps)
       addCap(_this.newCaps).then(function (resp){
         console.log(resp.data.msg)
-        _this.newCap.methods=[]
+        _this.handleCancel()
       })
     },
     handleOk(){
       const _this = this
-      if(1 in _this.newCap.methods){
+      if(_this.newCap.methods.includes(1)){
         _this.newCaps.has_face = 1
       }else {
         _this.newCaps.has_face = 0
       }
-      if(2 in _this.newCap.methods){
+      if(_this.newCap.methods.includes(2)){
         _this.newCaps.has_fall = 1
       }else {
         _this.newCaps.has_fall = 0
       }
-      if(3 in _this.newCap.methods){
+      if(_this.newCap.methods.includes(3)){
         _this.newCaps.has_fire = 1
       }else {
         _this.newCaps.has_fire = 0
       }
-      if(4 in _this.newCap.methods){
+      if(_this.newCap.methods.includes(4)){
         _this.newCaps.has_violence = 1
       }else {
         _this.newCaps.has_violence = 0
       }
-      if(5 in _this.newCap.methods){
+      if(_this.newCap.methods.includes(5)){
         _this.newCaps.has_emotion = 1
       }else {
         _this.newCaps.has_emotion = 0
       }
+      console.log(_this.newCap.methods)
     }
   },
 };

@@ -3,15 +3,15 @@ import {ADD_CAP, DELETE_CAP, SELECT_ALL_CAP, SELECT_CAP, UPDATE_CAP} from "@/ser
 
 
 export async function addCap(cap) {
-    return request(ADD_CAP, METHOD.GET,cap)
+    return request(ADD_CAP, METHOD.POST,cap)
 }
 
 export async function deleteCap(id) {
-    return request(DELETE_CAP + id, METHOD.GET)
+    return request(DELETE_CAP + id, METHOD.DELETE)
 }
 
-export async function updateCap() {
-    return request(UPDATE_CAP, METHOD.GET)
+export async function updateCap(cap) {
+    return request(UPDATE_CAP, METHOD.PUT,cap)
 }
 
 export async function selectAllCap() {
