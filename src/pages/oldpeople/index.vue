@@ -298,8 +298,7 @@ export default {
     },
 
 
-    handleCancel(e) {
-      console.log("Clicked cancel button");
+    handleCancel() {
       this.visibleAdd = false;
     },
     handleFormLayoutChange(e) {
