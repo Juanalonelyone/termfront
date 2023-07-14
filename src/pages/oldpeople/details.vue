@@ -74,7 +74,7 @@ export default {
       selectOld(_this.id).then(function (resp){
         _this.old_detail = resp.data.data
         _this.imageData = `data:image/png;base64,${resp.data.data.image_info.imageData}`
-        console.log( _this.imageData)
+        //console.log( _this.imageData)
       })
     },
     updateInfo(){

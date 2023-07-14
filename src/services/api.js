@@ -21,7 +21,11 @@ module.exports = {
   ADD_WORKER: `${BASE_URL}/add_Worker/`,
   DELETE_WORKER: `${BASE_URL}/delete_Worker/`,
   UPDATE_WORKER: `${BASE_URL}/update_Worker/`,
-  SELECT_WORKER:`${BASE_URL}/select_Worker/`,
+  SELECT_WORKER: `${BASE_URL}/select_Worker/`,
   SELECT_ALL_WORKER:`${BASE_URL}/select_allWorker/`,
+  //事件表查询
+  SELECT_ALL_EVENT: `${BASE_URL}/select_allEvent/`,
+  SELECT_EVENT: `${BASE_URL}/select_EventId/`,
+  DELETE_EVENT: `${BASE_URL}/delete_Event/`,
   //todo:其他表操作
 }
