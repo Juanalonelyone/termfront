@@ -12,8 +12,10 @@ import {initI18n} from '@/utils/i18n'
 import bootstrap from '@/bootstrap'
 import 'moment/locale/zh-cn'
 import VideoPlayer from 'vue-video-player'
-// require('video.js/dist/video-js.css')
-// require('vue-video-player/src/custom-theme.css')
+import videojs from 'video.js';
+import "video.js/dist/video-js.css";
+require('video.js/dist/video-js.css')
+require('vue-video-player/src/custom-theme.css')
 Vue.use(VideoPlayer);
 const router = initRouter(store.state.setting.asyncRoutes)
 const i18n = initI18n('CN', 'US')

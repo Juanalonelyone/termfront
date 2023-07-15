@@ -2,7 +2,7 @@
   <div class="video-page">
     <div class="video-row">
       <div class="video-container">
-        <img id="video1" class="video-js">
+        <img :src=src1 class="video-js">
         <select id="1" v-model="selectSource1">
           <option value="">请选择</option>
           <option v-for="source in sources" :key="source.id" :value="source.id">{{ source.name }}</option>
@@ -13,7 +13,7 @@
       </div>
 
       <div class="video-container">
-        <img id="video2" class="video-js">
+        <img :src=src2 class="video-js">
         <select id="2" v-model="selectSource2">
           <option value="">请选择</option>
           <option v-for="source in sources" :key="source.id" :value="source.id">{{ source.name }}</option>
@@ -46,7 +46,7 @@
 <!--          切换-->
 <!--        </a-button>-->
 <!--      </div>-->
-    </div>
+<!--    </div>-->
   </div>
 </template>
 <script>
@@ -57,7 +57,7 @@ import {selectAllCap} from "@/services/cap";
 export default {
   mounted() {
     this.getSources()
-    this.loadVideo()
+    // this.loadVideo()
   },
   data() {
     return {
@@ -65,8 +65,8 @@ export default {
       selectSource2:'2', // 用于绑定选择的视频流
       // selectSource3:'3', // 用于绑定选择的视频流
       // selectSource4:'4', // 用于绑定选择的视频流
-      src1:"http://127.0.0.1:8000/video1/1",
-      src2:"http://127.0.0.1:8000/video2/2",
+      src1:"http://127.0.0.1:8000/video/1",
+      src2:"http://127.0.0.1:8000/video/2",
       // src3:"http://127.0.0.1:8000/video3/3",
       // src4:"http://127.0.0.1:8000/video4/4",
       sources: [],
@@ -83,8 +83,8 @@ export default {
       ]);
       // const video_id = event.target.parentNode.id
       if (variables.size === 2) {
-        _this.src1 = "http://127.0.0.1:8000/video1/" + _this.selectSource1
-        _this.src2 = "http://127.0.0.1:8000/video2/" + _this.selectSource2
+        _this.src1 = "http://127.0.0.1:8000/video/" + _this.selectSource1
+        _this.src2 = "http://127.0.0.1:8000/video/" + _this.selectSource2
         // _this.src3 = "http://127.0.0.1:8000/video3/" + _this.selectSource3
         // _this.src4 = "http://127.0.0.1:8000/video4/" + _this.selectSource4
         _this.loadVideo()
@@ -104,6 +104,7 @@ export default {
       const videoPlayer2 = videojs("video2"); // 绑定id为video2的视频元素
       // const videoPlayer3 = videojs("video3"); // 绑定id为video3的视频元素
       // const videoPlayer4 = videojs("video4"); // 绑定id为video4的视频元素
+      console.log(111)
 
       // 销毁已存在的视频播放器
       videoPlayer1.dispose();
