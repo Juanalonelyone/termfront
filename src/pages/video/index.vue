@@ -73,7 +73,10 @@ export default {
     };
   },
   methods: {
-    changeSource() {
+    async changeSource() {
+      _this.stopVideoStream()
+      await sleep(300)
+      _this.enableeVideoStream()
       const _this = this
       const variables = new Set([
         this.selectSource1,
@@ -124,6 +127,25 @@ export default {
       // videoPlayer3.load();
       // videoPlayer4.load();
     },
+    stopVideoStream(){
+      axios.get('/stop-video-stream')
+          .then(response => {
+            console.log('停止请求已发送');
+          })
+          .catch(error => {
+            console.error('发送停止请求时出错', error);
+          });
+    },
+    enableeVideoStream(){
+      axios.get('/enable-video-stream')
+          .then(response => {
+            console.log('停止请求已发送');
+          })
+          .catch(error => {
+            console.error('发送停止请求时出错', error);
+          });
+    }
+
   }
 };
 </script>
