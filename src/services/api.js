@@ -32,6 +32,8 @@ module.exports = {
   DELETE_CAP:`${BASE_URL}/delete_Cap/`,
   UPDATE_CAP:`${BASE_URL}/update_Cap/`,
   SELECT_ALL_CAP: `${BASE_URL}/select_allCap/`,
-  SELECT_CAP: `${BASE_URL}/select_Cap/`
+  SELECT_CAP: `${BASE_URL}/select_Cap/`,
   //todo:其他表操作
+  OPEN: `${BASE_URL}//enable_video_stream/`,
+  CLOSE: `${BASE_URL}/stop_video_stream/`
 }

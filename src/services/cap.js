@@ -1,9 +1,9 @@
 import {METHOD, request} from "@/utils/request";
-import {ADD_CAP, DELETE_CAP, SELECT_ALL_CAP, SELECT_CAP, UPDATE_CAP} from "@/services/api";
+import {ADD_CAP, CLOSE, DELETE_CAP, OPEN, SELECT_ALL_CAP, SELECT_CAP, UPDATE_CAP} from "@/services/api";
 
 
 export async function addCap(cap) {
-    return request(ADD_CAP, METHOD.POST,cap)
+    return request(ADD_CAP, METHOD.POST, cap)
 }
 
 export async function deleteCap(id) {
@@ -11,7 +11,7 @@ export async function deleteCap(id) {
 }
 
 export async function updateCap(cap) {
-    return request(UPDATE_CAP, METHOD.PUT,cap)
+    return request(UPDATE_CAP, METHOD.PUT, cap)
 }
 
 export async function selectAllCap() {
@@ -20,4 +20,14 @@ export async function selectAllCap() {
 
 export async function selectCap(id) {
     return request(SELECT_CAP + id, METHOD.GET)
+}
+
+
+export async function Open() {
+    return request(OPEN, METHOD.GET)
+}
+
+
+export async function Close() {
+    return request(CLOSE, METHOD.GET)
 }
