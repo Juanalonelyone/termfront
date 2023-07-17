@@ -19,7 +19,7 @@
           </div>
           <div class="info-list">
             <span class="labels">性别：</span>
-            <span class="values">{{ old_detail.gender }}</span>
+            <span class="values">{{ gender }}</span>
           </div>
           <div class="info-list">
             <span class="labels">手机号码：</span>
@@ -45,6 +45,7 @@ export default {
         img_url:'',
       },
       imageData:null,
+      gender:'',
       id:this.$route.query.id
     };
   },
@@ -56,6 +57,7 @@ export default {
       const _this = this
       selectVol(_this.id).then(function (resp){
         _this.old_detail = resp.data.data
+        _this.gender = _this.old_detail.gender === 1 ? '男' : '女'
         _this.imageData = `data:image/png;base64,${resp.data.data.image_info.imageData}`
         console.log( _this.imageData)
       })

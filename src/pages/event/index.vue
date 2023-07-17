@@ -11,10 +11,15 @@
           <a-button type="danger" @click="deleteEvent(id.id)" style="margin-left: 10px">删除</a-button>
         </span>
       </a-table>
-      <dialog v-show="isShow" style="display: flex;flex-direction: column">
+      <a-modal
+      title="查看图片"
+      width="60%"
+      :visible="visible"
+      :confirm-loading="confirmLoading"
+      @ok="handleCancel"
+      @cancel="handleCancel">
         <img :src=imageData alt="Image" class="avatars" style="width: 640px;height: 480px;margin-bottom: 10px"/>
-        <a-button type="primary" @click="closeDialog" style="width: 70px;margin: auto">关闭</a-button>
-      </dialog>
+      </a-modal>
     </div>
 
   </page-layout>
@@ -56,8 +61,9 @@ export default {
       data:[],
       columns,
       arr: [],
-      isShow:false,
-      imageData:null
+      imageData:null,
+      visible: false,
+      confirmLoading: false,
     };
   },
   mounted() {
@@ -76,7 +82,7 @@ export default {
       const _this = this
       selectEvent(id).then(function (resp){
         _this.imageData = `data:image/png;base64,${resp.data.data.image_info.imageData}`
-        _this.isShow = true
+        _this.visible = true
       })
     },
     deleteEvent(id){
@@ -84,10 +90,11 @@ export default {
         alert(resp.data.msg)
       })
     },
-    closeDialog(){
-      this.isShow = false
+    handleCancel(){
+      this.visible = false;
     }
   },
+
 };
 </script>
 <style lang="less" scoped>

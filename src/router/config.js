@@ -70,11 +70,11 @@ const options = {
               },
               component: () => import("@/pages/oldpeople/update"),
             },
-            {
-              path: "primary",
-              name: "统计分析",
-              component: () => import("@/pages/dashboard/analysis/Analysis"),
-            },
+            // {
+            //   path: "primary",
+            //   name: "统计分析",
+            //   component: () => import("@/pages/dashboard/analysis/Analysis"),
+            // },
           ],
         },
         {
@@ -108,11 +108,11 @@ const options = {
               },
               component: () => import("@/pages/yuangong/update"),
             },
-            {
-              path: "advance",
-              name: "统计分析",
-              component: () => import("@/pages/yuangong/analysis"),
-            },
+            // {
+            //   path: "advance",
+            //   name: "统计分析",
+            //   component: () => import("@/pages/yuangong/analysis"),
+            // },
           ],
         },
         {
@@ -146,11 +146,11 @@ const options = {
               },
               component: () => import("@/pages/yigong/update"),
             },
-            {
-              path: "fenxi",
-              name: "统计分析",
-              component: () => import("@/pages/yigong/analysis"),
-            },
+            // {
+            //   path: "fenxi",
+            //   name: "统计分析",
+            //   component: () => import("@/pages/yigong/analysis"),
+            // },
           ],
         },
         {

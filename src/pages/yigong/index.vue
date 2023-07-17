@@ -135,6 +135,9 @@ const columns = [
     title: "性别",
     dataIndex: "gender",
     key: "gender",
+    customRender: (text) => {
+      return text === 1 ? '男' : '女';
+    }
   },
   {
     title: "手机号码",
